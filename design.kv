@@ -1,0 +1,122 @@
+#creating rules: 1. app screen
+<LoginScreen>:
+#creating widgets and Grid layouts(need to specify columns)
+    GridLayout:
+        cols: 1
+        GridLayout:
+            # styling login page.
+            cols: 1
+            padding: 15, 15
+            spacing: 20, 20
+            Label:
+                text: "User Login"
+                #changing font size for the label
+                font_size: '20sp'
+            TextInput:
+                id: username
+                hint_text: "Username"
+            TextInput:
+                id: password
+                # password entry will be visible as ***
+                password: True
+                hint_text: "Password"
+            #creating relative layout, so I could resize Button
+            RelativeLayout:
+                Button:
+                    text: "Login"
+                    on_press: root.login(root.ids.username.text, root.ids.password.text)
+                    size_hint: 0.3, 0.5
+                    #moving login button to the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            Label:
+                id: login_wrong
+                # leaving empty string, because its gonna appear with a conddition
+                text: ""
+        GridLayout:
+            cols:2
+            size_hint: 0.2, 0.2
+            padding: 10, 10
+            spacing: 10, 0
+            Button:
+                text: "Forgot password?"
+                #changing button image to link
+                background_color: 1, 1, 1, 0
+                opacity: 1 if self.state == 'normal' else 0.5
+                color: 0.1, 0.7, 1, 1
+            Button:
+                text: "Sign up"
+                background_color: 1, 1, 1, 0
+                opacity: 1 if self.state == 'normal' else 0.5
+                color: 0.1, 0.7, 1, 1
+# Pressing Sign up will call function sign_up. root allows to call LoginScreen class
+                on_press: root.sign_up()
+#creating sign up screen
+<SignUpScreen>:
+    GridLayout:
+        cols: 1
+        padding: 20, 20
+        spacing: 20, 20
+        Label:
+            text: "Sign up for a space journey"
+        TextInput:
+            id: username
+            hint_text: "Username"
+        TextInput:
+            id: password
+            hint_text: "Password"
+        Button:
+            text: "Submit"
+# by pressing submit I am sending text input values for further processing
+# root.ids.username - gives access of SignUpScreen username input
+            on_press: root.add_user(root.ids.username.text, root.ids.password.text )
+#creating another screen. After signing up going to login screen
+<SignUpScreenSuccess>:
+    GridLayout:
+        cols: 1
+        Label:
+            text: "Sign up success"
+        Button:
+            text: "Login page"
+            on_press: root.go_to_login()
+#Creatin a log in scrren
+<LoginScreenSuccess>:
+    GridLayout:
+        cols: 1
+        padding: 30, 30
+        spacing: 30, 30
+        RelativeLayout:
+            ImageButton:
+                on_press: root.log_out()
+                # changing log out button to log out image wish will change, when you gonna put mouse cursor on it
+                source: 'logout_hover.png' if self.hovered else "logout_nothover.png"
+                size_hint: 0.35, 0.35
+                pos_hint: {'center_x': 0.93, 'center_y': 0.8}
+        Label:
+            text: "How do you feel?"
+        TextInput:
+            id: feeling
+            hint_text: "Things to try: happy, sad, unloved..."
+        Button:
+            text: "Enlighten me"
+            on_press: root.get_quote(root.ids.feeling.text)
+        #adding scrollview to the quotes output
+        ScrollView:
+            Label:
+                id: quote
+                text: ""
+                #wraping text inside the app
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+
+#adding rule, invisible widget that keeps record of all the screens of the app.
+<RootWidget>:
+    LoginScreen:
+        name: "Login_screen"
+    SignUpScreen:
+        name: "sign_up_screen"
+    SignUpScreenSuccess:
+        name: "sign_up_screen_success"
+    LoginScreenSuccess:
+        name: "login_screen_success"
+
